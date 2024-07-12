@@ -1,13 +1,9 @@
 <template>
   <div class="toolbar">
-    <Tabs 
-      :tabs="currentTabs" 
-      :value="toolbarState" 
-      card 
-      @update:value="key => setToolbarState(key as ToolbarStates)"
-    />
+    <!-- eslint-disable-next-line -->
+    <Tabs :tabs="currentTabs" :value="toolbarState" card @update:value="key => setToolbarState(key as ToolbarStates)" />
     <div class="content">
-      <component :is="currentPanelComponent"></component>
+      <component :is="currentPanelComponent" :pptid="pptid" v-if="pptid"></component>
     </div>
   </div>
 </template>
@@ -27,13 +23,20 @@ import MultiPositionPanel from './MultiPositionPanel.vue'
 import SymbolPanel from './SymbolPanel.vue'
 import Tabs from '@/components/Tabs.vue'
 
+const props = defineProps<{
+  pptid: string
+}>()
+
+const { pptid } = props
+
 interface ElementTabs {
   label: string
   key: ToolbarStates
 }
 
 const mainStore = useMainStore()
-const { activeElementIdList, handleElement, toolbarState } = storeToRefs(mainStore)
+const { activeElementIdList, handleElement, toolbarState } =
+  storeToRefs(mainStore)
 
 const elementTabs = computed<ElementTabs[]>(() => {
   if (handleElement.value?.type === 'text') {
@@ -71,7 +74,9 @@ const currentTabs = computed(() => {
 })
 
 watch(currentTabs, () => {
-  const currentTabsValue: ToolbarStates[] = currentTabs.value.map(tab => tab.key)
+  const currentTabsValue: ToolbarStates[] = currentTabs.value.map(
+    (tab) => tab.key
+  )
   if (!currentTabsValue.includes(toolbarState.value)) {
     mainStore.setToolbarState(currentTabsValue[0])
   }

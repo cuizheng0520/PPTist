@@ -1,27 +1,24 @@
 <template>
   <div class="remark">
-    <div 
-      class="resize-handler"
-      @mousedown="$event => resize($event)"
-    ></div>
-    <Editor
-      :value="remark"
-      ref="editorRef"
-      @update="value => handleInput(value)"
-    />
+    <div class="resize-handler" @mousedown="$event => resize($event)"></div>
+    <Editor :value="remark" ref="editorRef" @update="value => handleInput(value)" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { computed, nextTick, ref, watch } from 'vue'
+import { computed, nextTick, ref, watch, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useSlidesStore } from '@/store'
 
 import Editor from './Editor.vue'
 
-const props = defineProps<{
-  height: number
-}>()
+const props = defineProps<{ pptid: string; height: number }>()
+const { pptid } = props
+
+onMounted(async () => {
+  // 确保加载幻灯片数据
+  await slidesStore.loadSlides(pptid)
+})
 
 const emit = defineEmits<{
   (event: 'update:height', payload: number): void
@@ -31,13 +28,21 @@ const slidesStore = useSlidesStore()
 const { currentSlide } = storeToRefs(slidesStore)
 
 const editorRef = ref<InstanceType<typeof Editor>>()
-watch(() => currentSlide.value.id, () => {
-  nextTick(() => {
-    editorRef.value!.updateTextContent()
-  })
-}, {
-  immediate: true,
-})
+watch(
+  () => currentSlide.value?.id,
+  (newId) => {
+    if (newId) {
+      nextTick(() => {
+        if (editorRef.value) {
+          editorRef.value.updateTextContent()
+        }
+      })
+    }
+  },
+  {
+    immediate: true,
+  }
+)
 
 const remark = computed(() => currentSlide.value?.remark || '')
 
@@ -50,7 +55,7 @@ const resize = (e: MouseEvent) => {
   const startPageY = e.pageY
   const originHeight = props.height
 
-  document.onmousemove = e => {
+  document.onmousemove = (e) => {
     if (!isMouseDown) return
 
     const currentPageY = e.pageY

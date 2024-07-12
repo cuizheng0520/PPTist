@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import { createRouter, createWebHistory } from 'vue-router'
 import App from './App.vue'
 
 import '@icon-park/vue-next/styles/index.css'
@@ -12,8 +13,16 @@ import '@/assets/styles/font.scss'
 import Icon from '@/plugins/icon'
 import Directive from '@/plugins/directive'
 
+const routes = [{ path: '/', component: App }]
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes,
+})
+
 const app = createApp(App)
 app.use(Icon)
 app.use(Directive)
 app.use(createPinia())
+app.use(router)
 app.mount('#app')

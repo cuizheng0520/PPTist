@@ -2,50 +2,31 @@
   <div class="slide-design-panel">
     <div class="title">背景填充</div>
     <div class="row">
-      <Select 
-        style="flex: 1;" 
-        :value="background.type" 
-        @update:value="value => updateBackgroundType(value as 'gradient' | 'image' | 'solid')"
-        :options="[
+      <!-- eslint-disable-next-line -->
+      <Select style="flex: 1;" :value="background.type" @update:value="value => updateBackgroundType(value as 'gradient' | 'image' | 'solid')" :options="[
           { label: '纯色填充', value: 'solid' },
           { label: '图片填充', value: 'image' },
           { label: '渐变填充', value: 'gradient' },
-        ]"
-      />
+        ]" />
       <div style="width: 10px;"></div>
 
       <Popover trigger="click" v-if="background.type === 'solid'" style="flex: 1;">
         <template #content>
-          <ColorPicker
-            :modelValue="background.color"
-            @update:modelValue="color => updateBackground({ color })"
-          />
+          <ColorPicker :modelValue="background.color" @update:modelValue="color => updateBackground({ color })" />
         </template>
         <ColorButton :color="background.color || '#fff'" />
       </Popover>
-
-      <Select 
-        style="flex: 1;" 
-        :value="background.imageSize || 'cover'" 
-        @update:value="value => updateBackground({ imageSize: value as 'repeat' | 'cover' | 'contain' })"
-        v-else-if="background.type === 'image'"
-        :options="[
+      <!-- eslint-disable-next-line -->
+      <Select style="flex: 1;" :value="background.imageSize || 'cover'" @update:value="value => updateBackground({ imageSize: value as 'repeat' | 'cover' | 'contain' })" v-else-if="background.type === 'image'" :options="[
           { label: '缩放', value: 'contain' },
           { label: '拼贴', value: 'repeat' },
           { label: '缩放铺满', value: 'cover' },
-        ]"
-      />
-
-      <Select 
-        style="flex: 1;" 
-        :value="background.gradientType || ''" 
-        @update:value="value => updateBackground({ gradientType: value as 'linear' | 'radial' })"
-        v-else
-        :options="[
+        ]" />
+      <!-- eslint-disable-next-line -->
+      <Select style="flex: 1;" :value="background.gradientType || ''" @update:value="value => updateBackground({ gradientType: value as 'linear' | 'radial' })" v-else :options="[
           { label: '线性渐变', value: 'linear' },
           { label: '径向渐变', value: 'radial' },
-        ]"
-      />
+        ]" />
     </div>
 
     <div class="background-image-wrapper" v-if="background.type === 'image'">
@@ -63,11 +44,10 @@
         <div style="width: 40%;">起点颜色：</div>
         <Popover trigger="click" style="width: 60%;">
           <template #content>
-            <ColorPicker
-              :modelValue="background.gradientColor![0]"
-              @update:modelValue="value => updateBackground({ gradientColor: [value, background.gradientColor![1]] })"
-            />
+            <!-- eslint-disable-next-line -->
+            <ColorPicker :modelValue="background.gradientColor![0]" @update:modelValue="value => updateBackground({ gradientColor: [value, background.gradientColor![1]] })" />
           </template>
+          <!-- eslint-disable-next-line -->
           <ColorButton :color="background.gradientColor![0]" />
         </Popover>
       </div>
@@ -75,24 +55,17 @@
         <div style="width: 40%;">终点颜色：</div>
         <Popover trigger="click" style="width: 60%;">
           <template #content>
-            <ColorPicker
-              :modelValue="background.gradientColor![1]"
-              @update:modelValue="value => updateBackground({ gradientColor: [background.gradientColor![0], value] })"
-            />
+            <!-- eslint-disable-next-line -->
+            <ColorPicker :modelValue="background.gradientColor![1]" @update:modelValue="value => updateBackground({ gradientColor: [background.gradientColor![0], value] })" />
           </template>
+          <!-- eslint-disable-next-line -->
           <ColorButton :color="background.gradientColor![1]" />
         </Popover>
       </div>
       <div class="row" v-if="background.gradientType === 'linear'">
         <div style="width: 40%;">渐变角度：</div>
-        <Slider
-          :min="0"
-          :max="360"
-          :step="15"
-          :value="background.gradientRotate || 0"
-          @update:value="value => updateBackground({ gradientRotate: value as number })" 
-          style="width: 60%;"
-        />
+        <!-- eslint-disable-next-line -->
+        <Slider :min="0" :max="360" :step="15" :value="background.gradientRotate || 0" @update:value="value => updateBackground({ gradientRotate: value as number })" style="width: 60%;" />
       </div>
     </div>
 
@@ -104,18 +77,14 @@
 
     <div class="row">
       <div style="width: 40%;">画布尺寸：</div>
-      <Select 
-        style="width: 60%;" 
-        :value="viewportRatio" 
-        @update:value="value => updateViewportRatio(value as number)"
-        :options="[
+      <!-- eslint-disable-next-line -->
+      <Select style="width: 60%;" :value="viewportRatio" @update:value="value => updateViewportRatio(value as number)" :options="[
           { label: '宽屏 16 : 9', value: 0.5625 },
           { label: '宽屏 16 : 10', value: 0.625 },
           { label: '标准 4 : 3', value: 0.75 },
           { label: '纸张 A3 / A4', value: 0.70710678 },
           { label: '竖向 A3 / A4', value: 1.41421356 },
-        ]"
-      />
+        ]" />
     </div>
 
     <Divider />
@@ -130,24 +99,17 @@
     </div>
     <div class="row">
       <div style="width: 40%;">字体：</div>
-      <Select
-        style="width: 60%;"
-        :value="theme.fontName"
-        @update:value="value => updateTheme({ fontName: value as string })"
-        :options="[
+      <!-- eslint-disable-next-line -->
+      <Select style="width: 60%;" :value="theme.fontName" @update:value="value => updateTheme({ fontName: value as string })" :options="[
           ...availableFonts,
           ...WEB_FONTS
-        ]"
-      />
+        ]" />
     </div>
     <div class="row">
       <div style="width: 40%;">字体颜色：</div>
       <Popover trigger="click" style="width: 60%;">
         <template #content>
-          <ColorPicker
-            :modelValue="theme.fontColor"
-            @update:modelValue="value => updateTheme({ fontColor: value })"
-          />
+          <ColorPicker :modelValue="theme.fontColor" @update:modelValue="value => updateTheme({ fontColor: value })" />
         </template>
         <ColorButton :color="theme.fontColor" />
       </Popover>
@@ -156,10 +118,7 @@
       <div style="width: 40%;">背景颜色：</div>
       <Popover trigger="click" style="width: 60%;">
         <template #content>
-          <ColorPicker
-            :modelValue="theme.backgroundColor"
-            @update:modelValue="value => updateTheme({ backgroundColor: value })"
-          />
+          <ColorPicker :modelValue="theme.backgroundColor" @update:modelValue="value => updateTheme({ backgroundColor: value })" />
         </template>
         <ColorButton :color="theme.backgroundColor" />
       </Popover>
@@ -168,89 +127,54 @@
       <div style="width: 40%;">主题色：</div>
       <Popover trigger="click" style="width: 60%;">
         <template #content>
-          <ColorPicker
-            :modelValue="theme.themeColor"
-            @update:modelValue="value => updateTheme({ themeColor: value })"
-          />
+          <ColorPicker :modelValue="theme.themeColor" @update:modelValue="value => updateTheme({ themeColor: value })" />
         </template>
         <ColorButton :color="theme.themeColor" />
       </Popover>
     </div>
-    
+
     <template v-if="moreThemeConfigsVisible">
       <div class="row">
         <div style="width: 40%;">边框样式：</div>
-        <Select 
-          style="width: 60%;" 
-          :value="theme.outline.style || ''" 
-          @update:value="value => updateTheme({ outline: { ...theme.outline, style: value as 'dashed' | 'solid' } })"
-          :options="[
+        <!-- eslint-disable-next-line -->
+        <Select style="width: 60%;" :value="theme.outline.style || ''" @update:value="value => updateTheme({ outline: { ...theme.outline, style: value as 'dashed' | 'solid' } })" :options="[
             { label: '实线边框', value: 'solid' },
             { label: '虚线边框', value: 'dashed' },
-          ]"
-        />
+          ]" />
       </div>
       <div class="row">
         <div style="width: 40%;">边框颜色：</div>
         <Popover trigger="click" style="width: 60%;">
           <template #content>
-            <ColorPicker
-              :modelValue="theme.outline.color"
-              @update:modelValue="value => updateTheme({ outline: { ...theme.outline, color: value } })"
-            />
+            <ColorPicker :modelValue="theme.outline.color" @update:modelValue="value => updateTheme({ outline: { ...theme.outline, color: value } })" />
           </template>
           <ColorButton :color="theme.outline.color || '#000'" />
         </Popover>
       </div>
       <div class="row">
         <div style="width: 40%;">边框粗细：</div>
-        <NumberInput 
-          :value="theme.outline.width || 0" 
-          @update:value="value => updateTheme({ outline: { ...theme.outline, width: value } })" 
-          style="width: 60%;" 
-        />
+        <NumberInput :value="theme.outline.width || 0" @update:value="value => updateTheme({ outline: { ...theme.outline, width: value } })" style="width: 60%;" />
       </div>
       <div class="row" style="height: 30px;">
         <div style="width: 40%;">水平阴影：</div>
-        <Slider 
-          style="width: 60%;"
-          :min="-10" 
-          :max="10" 
-          :step="1" 
-          :value="theme.shadow.h" 
-          @update:value="value => updateTheme({ shadow: { ...theme.shadow, h: value as number } })"
-        />
+        <!-- eslint-disable-next-line -->
+        <Slider style="width: 60%;" :min="-10" :max="10" :step="1" :value="theme.shadow.h" @update:value="value => updateTheme({ shadow: { ...theme.shadow, h: value as number } })" />
       </div>
       <div class="row" style="height: 30px;">
         <div style="width: 40%;">垂直阴影：</div>
-        <Slider
-          style="width: 60%;"
-          :min="-10"
-          :max="10"
-          :step="1"
-          :value="theme.shadow.v"
-          @update:value="value => updateTheme({ shadow: { ...theme.shadow, v: value as number } })"
-        />
+        <!-- eslint-disable-next-line -->
+        <Slider style="width: 60%;" :min="-10" :max="10" :step="1" :value="theme.shadow.v" @update:value="value => updateTheme({ shadow: { ...theme.shadow, v: value as number } })" />
       </div>
       <div class="row" style="height: 30px;">
         <div style="width: 40%;">模糊距离：</div>
-        <Slider
-          style="width: 60%;"
-          :min="1"
-          :max="20"
-          :step="1"
-          :value="theme.shadow.blur"
-          @update:value="value => updateTheme({ shadow: { ...theme.shadow, blur: value as number } })"
-        />
+        <!-- eslint-disable-next-line -->
+        <Slider style="width: 60%;" :min="1" :max="20" :step="1" :value="theme.shadow.blur" @update:value="value => updateTheme({ shadow: { ...theme.shadow, blur: value as number } })" />
       </div>
       <div class="row">
         <div style="width: 40%;">阴影颜色：</div>
         <Popover trigger="click" style="width: 60%;">
           <template #content>
-            <ColorPicker
-              :modelValue="theme.shadow.color"
-              @update:modelValue="value => updateTheme({ shadow: { ...theme.shadow, color: value } })"
-            />
+            <ColorPicker :modelValue="theme.shadow.color" @update:modelValue="value => updateTheme({ shadow: { ...theme.shadow, color: value } })" />
           </template>
           <ColorButton :color="theme.shadow.color" />
         </Popover>
@@ -269,15 +193,10 @@
 
     <div class="title">预置主题</div>
     <div class="theme-list">
-      <div 
-        class="theme-item" 
-        v-for="(item, index) in PRESET_THEMES" 
-        :key="index"
-        :style="{
+      <div class="theme-item" v-for="(item, index) in PRESET_THEMES" :key="index" :style="{
           backgroundColor: item.background,
           fontFamily: item.fontname,
-        }"
-      >
+        }">
         <div class="theme-item-content">
           <div class="text" :style="{ color: item.fontColor }">文字 Aa</div>
           <div class="colors">
@@ -293,17 +212,13 @@
     </div>
   </div>
 
-  <Modal
-    v-model:visible="themeStylesExtractVisible" 
-    :width="320"
-    @closed="themeStylesExtractVisible = false"
-  >
+  <Modal v-model:visible="themeStylesExtractVisible" :width="320" @closed="themeStylesExtractVisible = false">
     <ThemeStylesExtract @close="themeStylesExtractVisible = false" />
   </Modal>
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useMainStore, useSlidesStore } from '@/store'
 import type { SlideBackground, SlideTheme } from '@/types/slides'
@@ -332,14 +247,25 @@ const { slides, currentSlide, viewportRatio, theme } = storeToRefs(slidesStore)
 const moreThemeConfigsVisible = ref(false)
 const themeStylesExtractVisible = ref(false)
 
+const props = defineProps<{
+  pptid: string
+}>()
+
+const { pptid } = props
+
+onMounted(async () => {
+  // 确保加载幻灯片数据
+  await slidesStore.loadSlides(pptid)
+})
+
 const background = computed(() => {
-  if (!currentSlide.value.background) {
+  if (!currentSlide.value?.background) {
     return {
       type: 'solid',
       value: '#fff',
     } as SlideBackground
   }
-  return currentSlide.value.background
+  return currentSlide.value?.background
 })
 
 const { addHistorySnapshot } = useHistorySnapshot()
@@ -358,8 +284,7 @@ const updateBackgroundType = (type: 'solid' | 'image' | 'gradient') => {
       color: background.value.color || '#fff',
     }
     slidesStore.updateSlide({ background: newBackground })
-  }
-  else if (type === 'image') {
+  } else if (type === 'image') {
     const newBackground: SlideBackground = {
       ...background.value,
       type: 'image',
@@ -367,8 +292,7 @@ const updateBackgroundType = (type: 'solid' | 'image' | 'gradient') => {
       imageSize: background.value.imageSize || 'cover',
     }
     slidesStore.updateSlide({ background: newBackground })
-  }
-  else {
+  } else {
     const newBackground: SlideBackground = {
       ...background.value,
       type: 'gradient',
@@ -391,12 +315,14 @@ const updateBackground = (props: Partial<SlideBackground>) => {
 const uploadBackgroundImage = (files: FileList) => {
   const imageFile = files[0]
   if (!imageFile) return
-  getImageDataURL(imageFile).then(dataURL => updateBackground({ image: dataURL }))
+  getImageDataURL(imageFile).then((dataURL) =>
+    updateBackground({ image: dataURL })
+  )
 }
 
 // 应用当前页背景到全部页面
 const applyBackgroundAllSlide = () => {
-  const newSlides = slides.value.map(slide => {
+  const newSlides = slides.value.map((slide) => {
     return {
       ...slide,
       background: currentSlide.value.background,
@@ -516,7 +442,7 @@ const updateViewportRatio = (value: number) => {
     justify-content: center;
     align-items: center;
     display: flex;
-    background-color: rgba($color: #000, $alpha: .25);
+    background-color: rgba($color: #000, $alpha: 0.25);
     opacity: 0;
     transition: opacity $transitionDelay;
   }

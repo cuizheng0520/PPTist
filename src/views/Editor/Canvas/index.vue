@@ -1,85 +1,23 @@
 <template>
-  <div 
-    class="canvas" 
-    ref="canvasRef"
-    @wheel="$event => handleMousewheelCanvas($event)"
-    @mousedown="$event => handleClickBlankArea($event)"
-    @dblclick="$event => handleDblClick($event)"
-    v-contextmenu="contextmenus"
-    v-click-outside="removeEditorAreaFocus"
-  >
-    <ElementCreateSelection
-      v-if="creatingElement"
-      @created="data => insertElementFromCreateSelection(data)"
-    />
-    <ShapeCreateCanvas
-      v-if="creatingCustomShape"
-      @created="data => insertCustomShape(data)"
-    />
-    <div 
-      class="viewport-wrapper"
-      :style="{
+  <div class="canvas" ref="canvasRef" @wheel="$event => handleMousewheelCanvas($event)" @mousedown="$event => handleClickBlankArea($event)" @dblclick="$event => handleDblClick($event)" v-contextmenu="contextmenus" v-click-outside="removeEditorAreaFocus">
+    <ElementCreateSelection v-if="creatingElement" @created="data => insertElementFromCreateSelection(data)" />
+    <ShapeCreateCanvas v-if="creatingCustomShape" @created="data => insertCustomShape(data)" />
+    <div class="viewport-wrapper" :style="{
         width: viewportStyles.width * canvasScale + 'px',
         height: viewportStyles.height * canvasScale + 'px',
         left: viewportStyles.left + 'px',
         top: viewportStyles.top + 'px',
-      }"
-    >
+      }">
       <div class="operates">
-        <AlignmentLine 
-          v-for="(line, index) in alignmentLines" 
-          :key="index" 
-          :type="line.type" 
-          :axis="line.axis" 
-          :length="line.length"
-          :canvasScale="canvasScale"
-        />
-        <MultiSelectOperate 
-          v-if="activeElementIdList.length > 1"
-          :elementList="elementList"
-          :scaleMultiElement="scaleMultiElement"
-        />
-        <Operate
-          v-for="element in elementList" 
-          :key="element.id"
-          :elementInfo="element"
-          :isSelected="activeElementIdList.includes(element.id)"
-          :isActive="handleElementId === element.id"
-          :isActiveGroupElement="activeGroupElementId === element.id"
-          :isMultiSelect="activeElementIdList.length > 1"
-          :rotateElement="rotateElement"
-          :scaleElement="scaleElement"
-          :openLinkDialog="openLinkDialog"
-          :dragLineElement="dragLineElement"
-          :moveShapeKeypoint="moveShapeKeypoint"
-          v-show="!hiddenElementIdList.includes(element.id)"
-        />
+        <AlignmentLine v-for="(line, index) in alignmentLines" :key="index" :type="line.type" :axis="line.axis" :length="line.length" :canvasScale="canvasScale" />
+        <MultiSelectOperate v-if="activeElementIdList.length > 1" :elementList="elementList" :scaleMultiElement="scaleMultiElement" />
+        <Operate v-for="element in elementList" :key="element.id" :elementInfo="element" :isSelected="activeElementIdList.includes(element.id)" :isActive="handleElementId === element.id" :isActiveGroupElement="activeGroupElementId === element.id" :isMultiSelect="activeElementIdList.length > 1" :rotateElement="rotateElement" :scaleElement="scaleElement" :openLinkDialog="openLinkDialog" :dragLineElement="dragLineElement" :moveShapeKeypoint="moveShapeKeypoint" v-show="!hiddenElementIdList.includes(element.id)" />
         <ViewportBackground />
       </div>
 
-      <div 
-        class="viewport" 
-        ref="viewportRef"
-        :style="{ transform: `scale(${canvasScale})` }"
-      >
-        <MouseSelection 
-          v-if="mouseSelectionVisible"
-          :top="mouseSelection.top" 
-          :left="mouseSelection.left" 
-          :width="mouseSelection.width" 
-          :height="mouseSelection.height" 
-          :quadrant="mouseSelectionQuadrant"
-        />      
-        <EditableElement 
-          v-for="(element, index) in elementList" 
-          :key="element.id"
-          :elementInfo="element"
-          :elementIndex="index + 1"
-          :isMultiSelect="activeElementIdList.length > 1"
-          :selectElement="selectElement"
-          :openLinkDialog="openLinkDialog"
-          v-show="!hiddenElementIdList.includes(element.id)"
-        />
+      <div class="viewport" ref="viewportRef" :style="{ transform: `scale(${canvasScale})` }">
+        <MouseSelection v-if="mouseSelectionVisible" :top="mouseSelection.top" :left="mouseSelection.left" :width="mouseSelection.width" :height="mouseSelection.height" :quadrant="mouseSelectionQuadrant" />
+        <EditableElement v-for="(element, index) in elementList" :key="element.id" :elementInfo="element" :elementIndex="index + 1" :isMultiSelect="activeElementIdList.length > 1" :selectElement="selectElement" :openLinkDialog="openLinkDialog" v-show="!hiddenElementIdList.includes(element.id)" />
       </div>
     </div>
 
@@ -87,17 +25,22 @@
 
     <Ruler :viewportStyles="viewportStyles" :elementList="elementList" v-if="showRuler" />
 
-    <Modal
-      v-model:visible="linkDialogVisible" 
-      :width="540"
-    >
+    <Modal v-model:visible="linkDialogVisible" :width="540">
       <LinkDialog @close="linkDialogVisible = false" />
     </Modal>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { nextTick, onMounted, onUnmounted, provide, ref, watch, watchEffect } from 'vue'
+import {
+  nextTick,
+  onMounted,
+  onUnmounted,
+  provide,
+  ref,
+  watch,
+  watchEffect,
+} from 'vue'
 import { throttle } from 'lodash'
 import { storeToRefs } from 'pinia'
 import { useMainStore, useSlidesStore, useKeyboardStore } from '@/store'
@@ -139,6 +82,12 @@ import Operate from './Operate/index.vue'
 import LinkDialog from './LinkDialog.vue'
 import Modal from '@/components/Modal.vue'
 
+const props = defineProps<{
+  pptid: string
+}>()
+
+const { pptid } = props
+
 const mainStore = useMainStore()
 const {
   activeElementIdList,
@@ -160,7 +109,7 @@ const viewportRef = ref<HTMLElement>()
 const alignmentLines = ref<AlignmentLineProps[]>([])
 
 const linkDialogVisible = ref(false)
-const openLinkDialog = () => linkDialogVisible.value = true
+const openLinkDialog = () => (linkDialogVisible.value = true)
 
 watch(handleElementId, () => {
   mainStore.setActiveGroupElementId('')
@@ -168,7 +117,9 @@ watch(handleElementId, () => {
 
 const elementList = ref<PPTElement[]>([])
 const setLocalElementList = () => {
-  elementList.value = currentSlide.value ? JSON.parse(JSON.stringify(currentSlide.value.elements)) : []
+  elementList.value = currentSlide.value
+    ? JSON.parse(JSON.stringify(currentSlide.value.elements))
+    : []
 }
 watchEffect(setLocalElementList)
 
@@ -177,13 +128,26 @@ const { dragViewport, viewportStyles } = useViewportSize(canvasRef)
 
 useDropImageOrText(canvasRef)
 
-const { mouseSelection, mouseSelectionVisible, mouseSelectionQuadrant, updateMouseSelection } = useMouseSelection(elementList, viewportRef)
+const {
+  mouseSelection,
+  mouseSelectionVisible,
+  mouseSelectionQuadrant,
+  updateMouseSelection,
+} = useMouseSelection(elementList, viewportRef)
 
 const { dragElement } = useDragElement(elementList, alignmentLines, canvasScale)
 const { dragLineElement } = useDragLineElement(elementList)
 const { selectElement } = useSelectAndMoveElement(elementList, dragElement)
-const { scaleElement, scaleMultiElement } = useScaleElement(elementList, alignmentLines, canvasScale)
-const { rotateElement } = useRotateElement(elementList, viewportRef, canvasScale)
+const { scaleElement, scaleMultiElement } = useScaleElement(
+  elementList,
+  alignmentLines,
+  canvasScale
+)
+const { rotateElement } = useRotateElement(
+  elementList,
+  viewportRef,
+  canvasScale
+)
 const { moveShapeKeypoint } = useMoveShapeKeypoint(elementList, canvasScale)
 
 const { selectAllElements } = useSelectElement()
@@ -195,7 +159,11 @@ const { createTextElement, createShapeElement } = useCreateElement()
 
 // 组件渲染时，如果存在元素焦点，需要清除
 // 这种情况存在于：有焦点元素的情况下进入了放映模式，再退出时，需要清除原先的焦点（因为可能已经切换了页面）
-onMounted(() => {
+onMounted(async () => {
+  // 在组件挂载时，调用 loadSlides 方法从 API 加载幻灯片数据
+  const slidesStore = useSlidesStore()
+  await slidesStore.loadSlides(pptid)
+
   if (activeElementIdList.value.length) {
     nextTick(() => mainStore.setActiveElementIdList([]))
   }
@@ -215,7 +183,13 @@ const handleClickBlankArea = (e: MouseEvent) => {
 
 // 双击空白处插入文本
 const handleDblClick = (e: MouseEvent) => {
-  if (activeElementIdList.value.length || creatingElement.value || creatingCustomShape.value) return
+  if (
+    activeElementIdList.value.length ||
+    creatingElement.value ||
+    creatingCustomShape.value
+  ) {
+    return
+  }
   if (!viewportRef.value) return
 
   const viewportRect = viewportRef.value.getBoundingClientRect()
@@ -242,8 +216,14 @@ const removeEditorAreaFocus = () => {
 
 // 滚动鼠标
 const { scaleCanvas } = useScaleCanvas()
-const throttleScaleCanvas = throttle(scaleCanvas, 100, { leading: true, trailing: false })
-const throttleUpdateSlideIndex = throttle(updateSlideIndex, 300, { leading: true, trailing: false })
+const throttleScaleCanvas = throttle(scaleCanvas, 100, {
+  leading: true,
+  trailing: false,
+})
+const throttleUpdateSlideIndex = throttle(updateSlideIndex, 300, {
+  leading: true,
+  trailing: false,
+})
 
 const handleMousewheelCanvas = (e: WheelEvent) => {
   e.preventDefault()
@@ -266,16 +246,12 @@ const toggleRuler = () => {
 }
 
 // 在鼠标绘制的范围插入元素
-const { insertElementFromCreateSelection, formatCreateSelection } = useInsertFromCreateSelection(viewportRef)
+const { insertElementFromCreateSelection, formatCreateSelection } =
+  useInsertFromCreateSelection(viewportRef)
 
 // 插入自定义任意多边形
 const insertCustomShape = (data: CreateCustomShapeData) => {
-  const {
-    start,
-    end,
-    path,
-    viewBox,
-  } = data
+  const { start, end, path, viewBox } = data
   const position = formatCreateSelection({ start, end })
   if (position) {
     const supplement: Partial<PPTShapeElement> = {}
