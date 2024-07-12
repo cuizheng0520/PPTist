@@ -120,7 +120,7 @@ export const useSlidesStore = defineStore('slides', {
     async loadSlides(id: string) {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/ext/slides/${id}`
+          `http://123.57.105.147/api/ext/slides/${id}`
         )
         if (response.status !== 200) {
           throw new Error('Network response was not ok')
