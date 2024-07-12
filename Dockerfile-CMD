@@ -1,0 +1,5 @@
+docker buildx build --platform linux/amd64 -t registry.cn-beijing.aliyuncs.com/cuizheng/xiaoba_ppt_server:latest .
+
+docker push registry.cn-beijing.aliyuncs.com/cuizheng/xiaoba_ppt_server:latest
+
+docker run -d -p 8080:80 --name xiaoba_ppt_server registry.cn-beijing.aliyuncs.com/cuizheng/xiaoba_ppt_server:latest
