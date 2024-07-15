@@ -1,4 +1,4 @@
-docker buildx build --platform linux/amd64 -t registry.cn-beijing.aliyuncs.com/cuizheng/xiaoba_ppt_server:latest .
+docker buildx build --platform linux/amd64 -t registry.cn-beijing.aliyuncs.com/cuizheng/xiaoba_ppt_server:latest . --push .
 
 docker push registry.cn-beijing.aliyuncs.com/cuizheng/xiaoba_ppt_server:latest
 

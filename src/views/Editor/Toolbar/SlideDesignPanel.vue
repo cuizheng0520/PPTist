@@ -247,16 +247,16 @@ const { slides, currentSlide, viewportRatio, theme } = storeToRefs(slidesStore)
 const moreThemeConfigsVisible = ref(false)
 const themeStylesExtractVisible = ref(false)
 
-const props = defineProps<{
-  pptid: string
-}>()
+// const props = defineProps<{
+//   pptid: string
+// }>()
 
-const { pptid } = props
+// const { pptid } = props
 
-onMounted(async () => {
-  // 确保加载幻灯片数据
-  await slidesStore.loadSlides(pptid)
-})
+// onMounted(async () => {
+//   // 确保加载幻灯片数据
+//   await slidesStore.loadSlides(pptid)
+// })
 
 const background = computed(() => {
   if (!currentSlide.value?.background) {
